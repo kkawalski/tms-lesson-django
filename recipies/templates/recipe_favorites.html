@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Recipe List
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for recipe in recipe_list %}
+        <div id="row-{{recipe.pk}}" class="row border-bottom">
+            <div class="col">
+                {% if recipe.author != request.user %}
+                    <a href="{% url 'recipe-detail' pk=recipe.pk %}">{{ recipe.title }} by {{ recipe.author|default:"system"}}</a>
+                {% else %}
+                    <a href="{% url 'recipe-update' pk=recipe.pk %}">{{ recipe.title }} by {{ recipe.author|default:"system"}}</a>
+                {% endif %}
+            </div>
+            <div class="col-1">
+                {% if request.user in recipe.liked_by_users.all %}
+                    <button id="like-button-{{recipe.pk}}" onclick="likeRecipe('{{ recipe.pk }}')" class="like-button btn btn-danger">Like</button>
+                {% else %}
+                    <button id="like-button-{{recipe.pk}}" onclick="likeRecipe('{{ recipe.pk }}')" class="like-button btn btn-outline-danger">Like</button>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function likeRecipe(recipePk) {
+        console.log(recipePk)
+        var url = "{% url 'recipe-like' pk='1' %}".replace("1", recipePk)
+        const response = await fetch(url, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            headers: {
+              "Content-Type": "application/json",
+            },
+            redirect: "follow", // manual, *follow, error
+        });
+        const likeStatus = await response.json() // parses JSON response into native JavaScript objects
+        document.getElementById(`row-${recipePk}`).hidden = true
+    }
+</script>
+{% endblock %}

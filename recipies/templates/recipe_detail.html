@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ recipe.title }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div><h1>{{ object.title }} by {{ object.author }}</h1></div>
+        <div>{{ object.instruction }}</div>
+    </div>
+{% endblock %}

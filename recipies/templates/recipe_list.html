@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Recipe List
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="col-3">
+    <div class="row my-5 mx-3">
+        <div class="col">
+            <div class="card">
+                <form method="get" action="">
+                    <h5 class="card-header">Filters</h5>
+                    <div class="card-body">
+                        {% for field in filter.form %}
+                        <div class="row mb-3">  
+                            <div class="col">
+                                <div>
+                                    {{ field }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer text-center">
+                        <input class="btn btn-secondary" type="submit" value="Filter" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="col my-5 mx-3">
+    <div>
+        {% for recipe in recipe_list %}
+            <div id="row-{{recipe.pk}}" class="row border-bottom">
+                <div class="col">
+                    {% if recipe.author != request.user %}
+                        <a href="{% url 'recipe-detail' pk=recipe.pk %}">{{ recipe.title }} by {{ recipe.author|default:"system"}}</a>
+                    {% else %}
+                        <a href="{% url 'recipe-update' pk=recipe.pk %}">{{ recipe.title }} by {{ recipe.author|default:"system"}}</a>
+                    {% endif %}
+                </div>
+                <div class="col-1">
+                    {% if request.user in recipe.liked_by_users.all %}
+                        <button id="like-button-{{recipe.pk}}" onclick="likeRecipe('{{ recipe.pk }}')" class="like-button btn btn-danger">Like</button>
+                    {% else %}
+                        <button id="like-button-{{recipe.pk}}" onclick="likeRecipe('{{ recipe.pk }}')" class="like-button btn btn-outline-danger">Like</button>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function likeRecipe(recipePk) {
+        console.log(recipePk)
+        var url = "{% url 'recipe-like' pk='1' %}".replace("1", recipePk)
+        const response = await fetch(url, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            headers: {
+              "Content-Type": "application/json",
+            },
+            redirect: "follow", // manual, *follow, error
+        });
+        const likeStatus = await response.json() // parses JSON response into native JavaScript objects
+        console.log(likeStatus.status)
+        if (likeStatus.status) {
+            document.getElementById(`like-button-${recipePk}`).classList.remove("btn-outline-danger")
+            document.getElementById(`like-button-${recipePk}`).classList.add("btn-danger")
+        } else {
+            document.getElementById(`like-button-${recipePk}`).classList.remove("btn-danger")
+            document.getElementById(`like-button-${recipePk}`).classList.add("btn-outline-danger")
+        }
+    }
+</script>
+{% endblock %}

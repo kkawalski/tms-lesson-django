@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'home' %}">Recipe Your Life</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'recipe-list' %}">All Recipies</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'category-list' %}">Show categories</a>
+          </li>
+          {% if request.user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              My Recipes
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="{% url 'recipe-create' %}">Create New</a></li>
+              <li><a class="dropdown-item" href="{% url 'recipe-favorite' %}">Show Favorites</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'recipe-mine' %}">Show My Recipies</a></li>
+            </ul>
+          {% endif %}
+          </li>
+        </ul>
+        {% if request.user.is_authenticated %}
+          <div class="nav-item m-auto">
+            <a class="nav-link" href="{% url 'me' %}">{{ request.user.username }}</a>
+          </div>
+          <form class="d-flex" action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+            <button class="btn btn-outline-primary" type="submit">Logout</button>
+          </form>
+        {% else %}
+          <div class="nav-item mr-auto login-button">
+            <a class="btn btn-outline-primary" href="{% url 'login' %}?next={{ request.path }}">Login</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>

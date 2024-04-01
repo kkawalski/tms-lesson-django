@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ object.name }}
+{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+
+        <!-- <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'category-list' %}">Categories</a></li> -->
+        {% for cat in parents %}
+            <li class="breadcrumb-item"><a href="{% url 'category-detail' pk=cat.id %}">{{ cat.name }}</a></li>
+        {% endfor %}
+        <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+    </ol>
+</nav>
+
+<div>
+    <div class="row mb-3">
+        <div class="col">
+            <h1>{{ object.name }}</h1>
+        </div>
+    </div>
+    {% if object.children.exists %}
+        <div class="row border-bottom border-3">
+            <div class="col">
+                <h2>
+                    Sub categories:
+                </h2>
+            </div>
+        </div>
+        <div class="row mb-3">
+            {% for cat in object.children.all %}
+            <div class="col-4">
+                <a href="{% url 'category-detail' pk=cat.pk %}">
+                    <h3>
+                        {{ cat }}
+                    </h3>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="row border-bottom border-3">
+        <div class="col">
+            <h2>
+                Favorite Recipies:
+            </h2>
+        </div>
+    </div>
+    {% if recipe_list %}
+        <div class="row mb-3">
+            <div class="col">
+                {% for recipe in recipe_list %}
+                    <div class="row border-bottom">
+                        <div class="col">
+                            <a href="{% url 'recipe-detail' pk=recipe.pk %}">
+                                <h3>
+                                    {{ recipe }}        
+                                </h3>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <a href="{% url 'recipe-list' %}?category={{ object.id }}">
+                    <h4>
+                        Show more {{ object.name }}s
+                    </h4>
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col">
+                <h3>
+                    Be first in this category:
+                </h3>
+                <h3>
+                    <a type="button" class="btn btn-primary" href="{% url 'recipe-create' %}">Add new recipe</a>
+                </h3>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %} 

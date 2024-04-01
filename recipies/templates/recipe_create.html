@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Recipe Create
+{% endblock %}
+
+{% block content %}
+<div class="mt-3">
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            {{ form.title }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form.instruction }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form.category }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form.author }}
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+</div>
+{% endblock %}

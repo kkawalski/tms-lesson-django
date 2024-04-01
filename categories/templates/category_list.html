@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Category List
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="row my-5">
+        {% for category in category_list %}
+        <div class="col-md-3 col-sm-6 mb-5">
+            <a href="{% url 'category-detail' pk=category.pk %}">
+            <div class="card h-100" style="width: 18rem;">
+                <img src="
+                {% if category.image %}
+                {{ category.image.url }}
+                {% else %}
+                https://img.freepik.com/free-vector/flat-design-vegetarian-recipe-template_23-2149101942.jpg
+                {% endif %}" 
+                alt="CATEGORY IMAGE"
+                style="object-fit: cover;"
+                class="card-img-top h-50">
+                <div class="card-body h-50">
+                <h5 class="card-title text-center">{{ category.name }}</h5>
+                    <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+                
+                </div>
+            </div>
+            </a>
+        </div>
+        {% endfor %}
+        
+    </div>
+</div>
+    
+{% endblock %} 

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Recipe List
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for recipe in recipe_list %}
+        <div id="row-{{recipe.pk}}" class="row border-bottom">
+            <div class="col">
+                <a href="{% url 'recipe-update' pk=recipe.pk %}">{{ recipe.title }} by {{ request.user }}</a>
+            </div>
+            <div class="col-1">
+                {% if request.user in recipe.liked_by_users.all %}
+                    <button id="like-button-{{recipe.pk}}" onclick="likeRecipe('{{ recipe.pk }}')" class="like-button btn btn-danger">Like</button>
+                {% else %}
+                    <button id="like-button-{{recipe.pk}}" onclick="likeRecipe('{{ recipe.pk }}')" class="like-button btn btn-outline-danger">Like</button>
+                {% endif %}
+            </div>
+            <div class="col-1">
+                <form action="{% url 'recipe-delete' pk=recipe.pk %}" method="POST">
+                    {% csrf_token %}
+                    {% if recipe.is_active %}
+                        <button class="like-button btn btn-outline-dark" type="submit">Delete</button>
+                    {% else %}
+                        <button class="like-button btn btn-outline-success" type="submit">Restore</button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function likeRecipe(recipePk) {
+        console.log(recipePk)
+        var url = "{% url 'recipe-like' pk='1' %}".replace("1", recipePk)
+        const response = await fetch(url, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            headers: {
+              "Content-Type": "application/json",
+            },
+            redirect: "follow", // manual, *follow, error
+        });
+        const likeStatus = await response.json() // parses JSON response into native JavaScript objects
+        if (likeStatus.status) {
+            document.getElementById(`like-button-${recipePk}`).classList.remove("btn-outline-danger")
+            document.getElementById(`like-button-${recipePk}`).classList.add("btn-danger")
+        } else {
+            document.getElementById(`like-button-${recipePk}`).classList.remove("btn-danger")
+            document.getElementById(`like-button-${recipePk}`).classList.add("btn-outline-danger")
+        }
+    }
+</script>
+{% endblock %}
