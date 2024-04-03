@@ -141,3 +141,14 @@ def recipe_like(request: HttpRequest, pk):
         recipe.liked_by_users.add(user)
     recipe.save()
     return JsonResponse({"status": not dislike})
+
+
+def recipe_list_api(request: HttpRequest):
+    recipe_list = [
+        {
+            "title": recipe.title,
+            "instruction": recipe.instruction,
+            "ingredients": recipe.ingredients,
+        } for recipe in Recipe.objects.all()
+    ]
+    return JsonResponse({"recipe_list": recipe_list})

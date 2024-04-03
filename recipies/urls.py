@@ -9,6 +9,7 @@ from recipies.views import (
     RecipeDeleteView,
     MyRecipiesListView,
     recipe_like,
+    recipe_list_api,
 )
 
 
