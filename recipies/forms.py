@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 
 from recipies.models import Recipe
@@ -32,4 +33,13 @@ class RecipeUpdateCreateForm(forms.ModelForm):
             "title",
             "instruction",
             "category",
+            "ingredients",
         ]
+
+    def clean_ingredients(self):
+        return self.cleaned_data["ingredients"]
+
+    # def clean(self) -> dict[str, Any]:
+    #     import pdb
+    #     pdb.set_trace()
+    #     return super().clean()

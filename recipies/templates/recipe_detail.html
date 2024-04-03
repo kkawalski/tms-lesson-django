@@ -6,7 +6,14 @@
 
 {% block content %}
     <div>
-        <div><h1>{{ object.title }} by {{ object.author }}</h1></div>
-        <div>{{ object.instruction }}</div>
+        <div class="mb-3"><h1>{{ object.title }} by {{ object.author }}</h1></div>
+        <div class="mb-3">{{ object.instruction }}</div>
+        {% for ingr in object.ingredients %}
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-6">{{ ingr.name }}</div>
+                <div class="col-1">{{ ingr.value }}{{ ingr.mesaure }}</div>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

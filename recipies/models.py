@@ -13,6 +13,7 @@ class Recipe(models.Model):
     title = models.CharField(max_length=255)
     instruction = models.TextField(blank=True)
     created = models.DateTimeField(null=True, blank=True)
+    ingredients = models.JSONField(null=True, blank=True)
     author = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,
@@ -49,3 +50,15 @@ class FavoriteRecipe(models.Model):
         "users.User",
         on_delete=models.CASCADE,
     )
+
+
+class RecipeStep(models.Model):
+    description = models.TextField()
+    recipe = models.ForeignKey(
+        "recipies.Recipe",
+        on_delete=models.CASCADE,
+        related_name="steps",
+    )
+
+    class Meta:
+        ordering = ("id",)

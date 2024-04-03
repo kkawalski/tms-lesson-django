@@ -1,4 +1,8 @@
+from typing import Any
+import itertools
+
 from django.db.models.query import QuerySet
+from django.forms import BaseModelForm
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -48,6 +52,27 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         self.object.author = self.request.user
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
+    
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs =  super().get_form_kwargs()
+        if self.request.method in ("POST", "PUT"):
+            ingr_data = {
+                key: value for key, value in self.request.POST.items()
+                if key.startswith("name") or key.startswith("value") or key.startswith("measure")
+            }
+            ingr_data_with_idx = map(lambda item: tuple(item[0].rsplit("_", 1)[::-1] + [item[1]]), ingr_data.items())
+            ingr_groups = itertools.groupby(ingr_data_with_idx, key=lambda item: item[0])
+            ingrs = [None] * (len(ingr_data) // 3)
+            for idx, (_, i_data) in enumerate(ingr_groups):
+                ing = {k: v for _, k, v in i_data}
+                ingrs[idx] = ing
+            kwargs["data"] = {
+                "instruction": kwargs["data"]["instruction"][0],
+                "title": kwargs["data"]["title"][0],
+                "category": kwargs["data"]["category"][0],
+            }
+            kwargs["data"]["ingredients"] = ingrs
+        return kwargs
 
 
 class MyRecipiesListView(LoginRequiredMixin, ListView):
