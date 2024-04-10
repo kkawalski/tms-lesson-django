@@ -27,6 +27,7 @@ urlpatterns = [
     path('user/', include("users.urls")),
     
     path('api/recipe/', include("recipies.api.urls")),
+    path('api/user/', include("users.api.urls")),
 
     path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

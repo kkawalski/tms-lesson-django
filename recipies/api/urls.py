@@ -5,7 +5,7 @@ from recipies.api.views import RecipeListCreateAPIView, RecipeRetrieveUpdateDest
 
 
 recipe_router = routers.SimpleRouter()
-recipe_router.register("viewset", RecipeViewSet)
+recipe_router.register("", RecipeViewSet)
 
 
 # urlpatterns = [
